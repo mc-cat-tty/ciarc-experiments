@@ -1,6 +1,6 @@
 from __future__ import annotations
 from enum import Enum
-from dataclasses import dataclass, fields
+from dataclasses import dataclass, fields, asdict
 from operator import attrgetter
 
 class CameraAngle(Enum):
@@ -27,6 +27,16 @@ class StateControl:
     return list(
       map(attrgetter('name'), fields(self))
     )
+
+  def asdict(self) -> dict:
+    def factory(attributes):
+      _attributes = map(
+        lambda ele: (ele[0], ele[1].value) if issubclass(type(ele[1]), Enum) else (ele[0], ele[1]),
+        attributes
+      )
+      return dict(_attributes)
+
+    return asdict(self, dict_factory=factory)
   
   @staticmethod
   def map_key(in_key: str) -> str:

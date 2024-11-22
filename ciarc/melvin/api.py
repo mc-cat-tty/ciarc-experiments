@@ -46,8 +46,8 @@ class State:
 
   def __set__(self, obj, control: StateControl):
     current_state = self.__get__(obj, type(obj))
-    current_state = asdict(StateControl.from_telemetry(current_state))
-    _control = asdict(control)
+    current_state = StateControl.from_telemetry(current_state).asdict()
+    _control = control.asdict()
 
     changed_vals = filter(lambda ele: ele[1] is not None, _control.items())
     current_state.update(changed_vals)
@@ -77,7 +77,7 @@ class ApiWrapper:
   def get_telemetry(self):
     return self.__melvin_state
 
-  def set_control(self, state_control: StateControl):
+  def control(self, state_control: StateControl):
     """
     Leave state_control's fields empty to keep their current values
     """
