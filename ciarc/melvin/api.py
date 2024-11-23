@@ -57,7 +57,7 @@ class State:
     return res.status_code
 
 
-class ApiWrapper:
+class MelvinApi:
   __melvin_state = State("/observation", "/control")
 
   def __init__(self, endpoint_uri: str):
