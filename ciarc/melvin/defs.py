@@ -1,9 +1,10 @@
 from __future__ import annotations
 from enum import Enum
-from dataclasses import dataclass, fields, asdict
+from dataclasses import dataclass, fields, asdict, field
 from operator import attrgetter
-from typing import Tuple
 from datetime import datetime
+from numpy.typing import ArrayLike
+import numpy as np
 
 class CameraAngle(Enum):
   NARROW = "narrow"
@@ -34,8 +35,8 @@ class Telemetry:
   cam_angle: CameraAngle
   energy: Energy
   sim_speed: int
-  coord: Tuple[float, float]  # (x, y)
-  vel: Tuple[float]  # (vx, vy)
+  coord: ArrayLike = field(default_factory=np.ndarray)  # (x, y)
+  vel: ArrayLike = field(default_factory=np.ndarray)  # (vx, vy)
 
   def __init__(
     self,
@@ -49,11 +50,11 @@ class Telemetry:
     self.cam_angle = CameraAngle(angle)
     self.energy = Energy(battery, max_battery, fuel)
     self.sim_speed = simulation_speed
-    self.coord = (width_x, height_y)
-    self.vel = (vx, vy)
-  
+    self.coord = np.asarray((width_x, height_y))
+    self.vel = np.asarray((vx, vy))
+    
   def __str__(self):
-    return f"x{self.sim_speed} [{self.state} {self.time:%d/%m/%Y %H:%M:%S}]: {self.coord=} {self.vel=} | {self.energy} | {self.cam_angle}"
+    return f"x{self.sim_speed} [{self.state} {self.time:%d/%m/%Y %H:%M:%S}]: coord={self.coord} vel={self.vel} | {self.energy} | {self.cam_angle}"
 
 
 @dataclass(frozen=True)
@@ -81,8 +82,8 @@ class StateControl:
   @staticmethod
   def from_telemetry(telemetry: Telemetry) -> StateControl:
     return StateControl(
-      telemetry.vel[0],
-      telemetry.vel[1],
+      float(telemetry.vel[0]),
+      float(telemetry.vel[1]),
       telemetry.cam_angle,
       telemetry.state
     )
