@@ -46,7 +46,7 @@ class State:
 
   def __set__(self, obj, control: StateControl):
     current_state = self.__get__(obj, type(obj))
-    current_state = StateControl.from_telemetry(current_state).asdict()
+    current_state = StateControl.from_telemetry(Telemetry(**current_state)).asdict()
     _control = control.asdict()
 
     changed_vals = filter(lambda ele: ele[1] is not None, _control.items())
@@ -74,8 +74,8 @@ class MelvinApi:
   def reset(self, _):
     return None
 
-  def get_telemetry(self):
-    return self.__melvin_state
+  def get_telemetry(self) -> Telemetry:
+    return Telemetry(**self.__melvin_state)
 
   def control(self, state_control: StateControl):
     """
