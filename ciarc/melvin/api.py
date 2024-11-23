@@ -1,7 +1,8 @@
 import requests as rq
 from typing import Callable
 from ciarc.melvin.defs import *
-from dataclasses import asdict
+from PIL import Image
+from io import BytesIO
 
 def build_uri(hostname: str, port: str|int) -> str:
   return f"http://{hostname}:{port}"
@@ -23,7 +24,7 @@ def api_getter(path: str = None):
       res = rq.get(uri+_path)
 
       if not res.ok: raise ApiError(res)
-      return f(self, res.json(), *args, **kwargs)
+      return f(self, res, *args, **kwargs)
     
     return wrapper
   return decorator
@@ -42,7 +43,7 @@ class State:
   
   @api_getter()
   def __get__(self, res, obj, objtype=None):
-    return res
+    return res.json()
 
   def __set__(self, obj, control: StateControl):
     current_state = self.__get__(obj, type(obj))
@@ -67,8 +68,8 @@ class MelvinApi:
     return self.__uri
   
   @api_getter("/image")
-  def get_image(self, res):
-    return res
+  def get_image(self, res) -> Image:
+    return Image.open(BytesIO(res.content))
   
   @api_getter("/reset")
   def reset(self, _):
