@@ -31,6 +31,7 @@ class Energy:
 @dataclass
 class Telemetry:
   time: datetime
+  active_time: float
   state: MelvinState
   cam_angle: CameraAngle
   energy: Energy
@@ -43,9 +44,10 @@ class Telemetry:
     state: str, angle: str, simulation_speed: int,
     width_x: int, height_y: int, vx: float, vy: float,
     battery: float, max_battery: float, fuel: float,
-    timestamp: str, *args, **kwargs
+    active_time: float, timestamp: str, *args, **kwargs
   ):
     self.time = datetime.fromisoformat(timestamp)
+    self.active_time = active_time
     self.state = MelvinState(state)
     self.cam_angle = CameraAngle(angle)
     self.energy = Energy(battery, max_battery, fuel)

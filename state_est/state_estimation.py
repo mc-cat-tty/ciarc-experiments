@@ -1,28 +1,26 @@
 from ciarc.melvin.api import MelvinApi, build_uri
-from ciarc.melvin.tools import ApiDash
-from curses import wrapper
 from signal import signal, SIGINT
 from sys import exit
-from threading import Thread
+from ciarc.odometry.model import predict_position_discrete_time, predict_position
+from time import sleep
+import numpy as np
 
 ENDPOINT_IP = "10.100.50.1"
 ENDPOINT_PORT = 33000
+SAMPLES = 10
 
-def collect_plot_data(api: MelvinApi):
-  while True:
-    print('a')
-  
-  # Plot
-
-
-def main(screen):
+def main():
   api = MelvinApi(build_uri(ENDPOINT_IP, ENDPOINT_PORT))
-  tools = ApiDash(api, screen)
 
-  # Thread(target=collect_plot_data, args=(api,)).start()
-  tools.interactive_superloop()
+  start_telem = api.get_telemetry()
 
+  for _ in range(SAMPLES):
+    telem = api.get_telemetry()
+    predicted_coord = predict_position(start_telem, telem.time)
+    predicted_coord_discrete = predict_position_discrete_time(start_telem, telem.time)
+    print(f"Continous vs discrete: {np.linalg.norm(telem.coord-predicted_coord)} {np.linalg.norm(telem.coord-predicted_coord_discrete)}")
+    
 
 if __name__ == "__main__":
   signal(SIGINT, lambda sig, frame: exit(0))
-  wrapper(main)
+  main()
