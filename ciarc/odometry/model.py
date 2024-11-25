@@ -18,11 +18,11 @@ def predict_position(telemetry: Telemetry, time: datetime|float = datetime.now()
   else:
     diff_time = time - telemetry.active_time
   
-  return motion_model(
+  return np.round(motion_model(
     telemetry.coord,
     telemetry.vel,
     diff_time
-  )
+  ))
 
 def predict_position_discrete_time(telemetry: Telemetry, time: datetime|float = datetime.now(), sim_freq_hz: int = 2):
   ref_time = telemetry.active_time
@@ -31,8 +31,8 @@ def predict_position_discrete_time(telemetry: Telemetry, time: datetime|float = 
     time = time.timestamp()
     ref_time = telemetry.time.timestamp()
   
-  return motion_model(
+  return np.round(motion_model(
     telemetry.coord,
     telemetry.vel,
     discretize_time(time, sim_freq_hz) - discretize_time(ref_time, sim_freq_hz)
-  )
+  ))
