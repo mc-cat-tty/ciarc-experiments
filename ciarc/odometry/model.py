@@ -19,7 +19,7 @@ def predict_position(telemetry: Telemetry, time: datetime = datetime.now(), sim_
     (time - telemetry.time).total_seconds()
   )
 
-def predict_position_discrete_time(telemetry: Telemetry, time: datetime|float = datetime.now(), sim_freq_hz: int = 2):
+def predict_position_discrete_time(telemetry: Telemetry, time: datetime = datetime.now(), sim_freq_hz: int = 2):
   return motion_model(
     telemetry.coord,
     telemetry.vel,
