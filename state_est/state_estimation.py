@@ -7,7 +7,7 @@ import seaborn as sb
 import matplotlib.pyplot as pl
 import pandas as pd
 from functools import partial
-from operator import attrgetter, sub
+from operator import attrgetter
 
 ENDPOINT_IP = "10.100.50.1"
 ENDPOINT_PORT = 33000
@@ -46,8 +46,6 @@ def main():
 	)
   sb.despine()
   pl.show()
-
-  # print(f"Continous vs discrete: {np.linalg.norm(telem.coord-predicted_coord)} {np.linalg.norm(telem.coord-predicted_coord_discrete)}")
     
 
 if __name__ == "__main__":

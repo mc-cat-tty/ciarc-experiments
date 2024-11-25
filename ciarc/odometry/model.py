@@ -9,19 +9,30 @@ def motion_model(start_coord: ArrayLike, velocity: ArrayLike, delta_sec: float):
 def discretize_time(time_sec: float, freq_hz: int) -> float:
   sim_quanta: float = 1/freq_hz
   under_sec = np.modf(time_sec)[0]
-  quanta_idx = int(under_sec / sim_quanta)
+  quanta_idx = under_sec // sim_quanta
   return int(time_sec) + quanta_idx * sim_quanta
 
-def predict_position(telemetry: Telemetry, time: datetime = datetime.now(), sim_freq_hz: int = 2):
+def predict_position(telemetry: Telemetry, time: datetime|float = datetime.now()):
+  if issubclass(type(time), datetime):
+    diff_time = (time - telemetry.time).total_seconds()
+  else:
+    diff_time = time - telemetry.active_time
+  
   return motion_model(
     telemetry.coord,
     telemetry.vel,
-    (time - telemetry.time).total_seconds()
+    diff_time
   )
 
-def predict_position_discrete_time(telemetry: Telemetry, time: datetime = datetime.now(), sim_freq_hz: int = 2):
+def predict_position_discrete_time(telemetry: Telemetry, time: datetime|float = datetime.now(), sim_freq_hz: int = 2):
+  ref_time = telemetry.active_time
+  
+  if issubclass(type(time), datetime):
+    time = time.timestamp()
+    ref_time = telemetry.time.timestamp()
+  
   return motion_model(
     telemetry.coord,
     telemetry.vel,
-    discretize_time(time.timestamp(), sim_freq_hz) - discretize_time(telemetry.time.timestamp(), sim_freq_hz)
+    discretize_time(time, sim_freq_hz) - discretize_time(ref_time, sim_freq_hz)
   )
