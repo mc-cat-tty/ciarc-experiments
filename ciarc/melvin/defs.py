@@ -1,4 +1,5 @@
 from __future__ import annotations
+from ciarc.camera.lenses import *
 from enum import Enum
 from dataclasses import dataclass, fields, asdict, field
 from operator import attrgetter
@@ -6,10 +7,6 @@ from datetime import datetime
 from numpy.typing import ArrayLike
 import numpy as np
 
-class CameraAngle(Enum):
-  NARROW = "narrow"
-  NORMAL = "normal"
-  WIDE = "wide"
 
 class MelvinState(Enum):
   DEPLOYMENT = "deployment"
@@ -36,7 +33,7 @@ class Telemetry:
   cam_angle: CameraAngle
   energy: Energy
   sim_speed: int
-  coord: ArrayLike = field(default_factory=np.ndarray)  # (x, y)
+  coord: ArragiyLike = field(default_factory=np.ndarray)  # (x, y)
   vel: ArrayLike = field(default_factory=np.ndarray)  # (vx, vy)
 
   def __init__(
