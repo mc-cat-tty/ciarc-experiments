@@ -4,7 +4,7 @@ from enum import Enum
 from dataclasses import dataclass, fields, asdict, field
 from operator import attrgetter
 from datetime import datetime
-from numpy.typing import ArrayLike
+from numpy.typing import NDArray
 import numpy as np
 
 
@@ -33,8 +33,8 @@ class Telemetry:
   cam_angle: CameraAngle
   energy: Energy
   sim_speed: int
-  coord: ArrayLike = field(default_factory=np.ndarray)  # (x, y)
-  vel: ArrayLike = field(default_factory=np.ndarray)  # (vx, vy)
+  coord: NDArray = field(default_factory=np.ndarray)  # (x, y)
+  vel: NDArray = field(default_factory=np.ndarray)  # (vx, vy)
 
   def __init__(
     self,

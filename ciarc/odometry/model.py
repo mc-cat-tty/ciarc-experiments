@@ -1,9 +1,9 @@
-from numpy.typing import ArrayLike
+from numpy.typing import NDArray
 from datetime import timedelta, datetime
 from ciarc.melvin.defs import Telemetry
 import numpy as np
 
-def motion_model(start_coord: ArrayLike, velocity: ArrayLike, delta_sec: float):
+def motion_model(start_coord: NDArray, velocity: NDArray, delta_sec: float):
   return start_coord + velocity * delta_sec
 
 def discretize_time(time_sec: float, freq_hz: int) -> float:
