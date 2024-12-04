@@ -33,7 +33,7 @@ class Telemetry:
   cam_angle: CameraAngle
   energy: Energy
   sim_speed: int
-  coord: ArragiyLike = field(default_factory=np.ndarray)  # (x, y)
+  coord: ArrayLike = field(default_factory=np.ndarray)  # (x, y)
   vel: ArrayLike = field(default_factory=np.ndarray)  # (vx, vy)
 
   def __init__(
